@@ -1,0 +1,15 @@
+SELECT
+  p.id AS post_id,
+  p.name AS post_name,
+  c.id AS comment_id,
+  c.content AS comment_content,
+  RANK() OVER (PARTITION BY p.id ORDER BY c.createdts DESC) AS comment_rank
+FROM
+  post p
+JOIN
+  comment c ON p.id = c.postid
+JOIN
+  author a ON p.authorid = a.id
+WHERE
+  a.name = 'James Bond' AND
+  RANK() OVER (PARTITION BY p.id ORDER BY c.createdts DESC) <= 10;
